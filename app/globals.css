@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+}
+
+/* Selection color - match accent and theme */
+::selection {
+  background: rgba(16, 185, 129, 0.25); /* emerald-500 with alpha */
+  color: var(--foreground);
+}
+@media (prefers-color-scheme: dark) {
+  ::selection {
+    background: rgba(16, 185, 129, 0.35);
+    color: var(--foreground);
+  }
+}
+
+/* Hide native cursor on pointer devices to let GhostCursor be the only visible cursor */
+@media (pointer: fine) {
+  html, body, * {
+    cursor: none !important;
+  }
+}
+
+/* Beats animation */
+@keyframes beat {
+  0%, 100% { transform: scaleY(0.3); opacity: 0.6; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+.beat-bar {
+  transform-origin: center bottom;
+  animation: beat 1.2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* BackgroundBeams */
+@keyframes beam-move {
+  0% { transform: translateX(-60%) rotate(15deg); }
+  100% { transform: translateX(60%) rotate(15deg); }
+}
+.beam-line {
+  position: absolute;
+  left: -20%;
+  top: var(--y);
+  width: 140%;
+  height: 2px;
+  opacity: var(--op, 0.4);
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.5), transparent);
+  animation: beam-move var(--dur, 12s) linear infinite;
+}
+
+/* Bento card subtle border glow on hover (React Bits-inspired) */
+.bento-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08), transparent);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.bento-card:hover::after { opacity: 1; }
+
+/* Menu font override */
+.menu-font { font-family: var(--font-poppins), sans-serif; }
+/* ReactBits-inspired: Lanyard background */
+@keyframes lanyard-shift {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 200% 0, 0 0; }
+}
+.rb-lanyard {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(16, 185, 129, 0.08) 0px,
+      rgba(16, 185, 129, 0.08) 1px,
+      transparent 1px,
+      transparent 24px
+    ),
+    radial-gradient(1200px 600px at 50% 0%, rgba(16,185,129,0.08), transparent 60%);
+  animation: lanyard-shift 20s linear infinite;
+}
+
+/* ReactBits-inspired: Faulty Terminal background */
+@keyframes scanlines {
+  0% { background-position: 0 0; opacity: .25; }
+  100% { background-position: 0 4px; opacity: .3; }
+}
+@keyframes flicker {
+  0%, 100% { opacity: .98; }
+  50% { opacity: .92; }
+}
+.rb-terminal-bg {
+  background:
+    radial-gradient(1200px 800px at 50% -10%, rgba(16,185,129,0.08), transparent 60%),
+    radial-gradient(800px 600px at 120% 0%, rgba(59,130,246,0.08), transparent 60%),
+    radial-gradient(800px 600px at -20% 10%, rgba(244,63,94,0.08), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  filter: saturate(1.05);
+  animation: flicker 6s ease-in-out infinite;
+}
+.rb-terminal-noise {
+  background-image: repeating-linear-gradient(transparent, transparent 3px, rgba(255,255,255,0.04) 3px, rgba(255,255,255,0.04) 4px);
+  mix-blend-mode: overlay;
+  animation: scanlines .8s linear infinite;
+}
+
+/* Staggered menu animation */
+@keyframes stagger-in {
+  0% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.stagger-item {
+  animation: stagger-in .35s ease forwards;
+  animation-delay: calc(var(--i) * 60ms);
+  opacity: 0;
+}
